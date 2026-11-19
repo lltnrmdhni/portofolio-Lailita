@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAILITA N.R — Electrical Engineering &amp; Automation Portfolio</title>
+    <!-- Google Fonts: Inter, Fraunces (Bold Editorial Serif), and JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PDF.js for Automatic Photo Extraction from Original PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#F7F0E6',
+                        'cream-light': '#FBF7F1',
+                        'cream-dark': '#EDE2D2',
+                        berry: '#A3264A',
+                        'berry-dark': '#7D1B37',
+                        rose: '#F3D8DF',
+                        ink: '#1C1C1C',
+                        'ink-muted': '#4A4441',
+                        'pelican-red': '#C82328'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Fraunces', 'Georgia', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F7F0E6;
+            color: #1C1C1C;
+        }
+        .rose-glow {
+            background: radial-gradient(circle, rgba(243, 216, 223, 0.85) 0%, rgba(247, 240, 230, 0) 70%);
+            pointer-events: none;
+        }
+        .photo-slot {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .photo-slot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(163, 38, 74, 0.28);
+        }
+        .photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-berry selection:text-cream">
+
+    <!-- Hidden File Inputs for Single Photo & PDF Extraction -->
+    <input type="file" id="singlePhotoInput" accept="image/*" class="hidden">
+    <input type="file" id="pdfUploadInput" accept="application/pdf" class="hidden">
+
+    <!-- =========================================================================
+         STICKY TOP NAVIGATION BAR WITH PELICAN MITRA SEJATI LOGO (TOP-LEFT)
+    ========================================================================== -->
+    <header class="sticky top-0 z-40 w-full bg-cream/95 backdrop-blur-md border-b border-berry/15">
+        <div class="max-w-[1160px] mx-auto px-3 sm:px-5 py-2.5 flex items-center justify-between gap-3">
+            <!-- Top-Left: PELICAN MITRA SEJATI Brand Logo (Click to customize logo if desired) -->
+            <div id="companyLogoWrapper" title="Klik untuk mengganti file logo" class="flex items-center gap-2 cursor-pointer select-none shrink-0 group">
+                <img id="customLogoImg" src="" alt="PELICAN MITRA SEJATI" class="hidden h-9 w-auto object-contain rounded">
+                <div id="defaultPelicanLogo" class="flex items-center gap-2">
+                    <!-- Red Square Icon with White Pelican in Letter 'P' -->
+                    <div class="w-9 h-9 bg-[#C82328] rounded-[3px] flex items-center justify-center p-0.5 shadow-xs group-hover:scale-105 transition-transform">
+                        <svg viewBox="0 0 64 64" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- White Bold 'P' Shape -->
+                            <path d="M12 8H36C47.5 8 54 14.5 54 24.5C54 34.5 47.5 41 36 41H25V56H12V8Z" fill="#FFFFFF"/>
+                            <!-- Red Pelican Silhouette Inside 'P' -->
+                            <path d="M16 32C21 26 26 23 32 22C35 21.5 38 20.5 39 18.5C40 16.5 38.5 14.5 36.5 14.5C34.5 14.5 33 16 31.5 17.5L17 24.5L31 20.5C27 24 23 28 21 34C19.5 38.5 20.5 44 23 48H15C14 42 14 36 16 32Z" fill="#C82328"/>
+                        </svg>
+                    </div>
+                    <!-- Stacked Bold Typography: PELICAN / MITRA / SEJATI -->
+                    <div class="leading-[0.95] font-extrabold tracking-tight text-[11px] sm:text-xs uppercase">
+                        <div class="text-[#C82328]">PELICAN</div>
+                        <div class="text-[#1C1C1C]">MITRA</div>
+                        <div class="text-[#1C1C1C]">SEJATI</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 text-xs font-bold tracking-wider uppercase text-ink">
+                <a href="#profile" class="hover:text-berry transition-colors">Profile</a>
+                <a href="#education" class="hover:text-berry transition-colors">Education</a>
+                <a href="#project" class="hover:text-berry transition-colors">Project</a>
+                <a href="#experience" class="hover:text-berry transition-colors">Experience</a>
+                <a href="#contact" class="hover:text-berry transition-colors">Contact</a>
+            </nav>
+
+            <!-- Action Button: Load Photos from PDF / Manage Photos -->
+            <div class="flex items-center gap-2">
+                <button type="button" id="btnExtractPdf" class="px-3 py-1.5 rounded-lg bg-berry hover:bg-berry-dark text-cream font-mono text-[11px] font-bold tracking-wide shadow-xs transition-colors flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    <span>GANTI FOTO / PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================================================================
+         MAIN PORTFOLIO CONTENT (ALL 6 PAGES IN CLEAN STANDARD DOCUMENT FLOW)
+    ========================================================================== -->
+    <main class="max-w-[1160px] mx-auto px-3 sm:px-5 py-4 space-y-4">
+
+        <!-- =====================================================================
+             PAGE 1: COVER SLIDE ("HI, I'm LAILITA N.R")
+        ====================================================================== -->
+        <section id="cover" class="relative rounded-2xl bg-cream-light/80 border border-berry/15 p-5 sm:p-7 overflow-hidden">
+            <div class="rose-glow absolute -top-20 -right-20 w-72 h-72 rounded-full"></div>
+            <div class="rose-glow absolute -bottom-20 -left-20 w-64 h-64 rounded-full"></div>
+
+            <div class="relative grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <!-- Left Column: Title, Chevrons & Slide Index -->
+                <div class="md:col-span-6 space-y-4">
+                    <div>
+                        <h1 class="font-serif font-black text-4xl sm:text-5xl lg:text-[54px] leading-[1.03] text-berry tracking-tight">
+                            HI, I&rsquo;m<br>
+                            LAILITA N.R
+                        </h1>
+                        <div class="mt-2 font-mono font-extrabold text-xl sm:text-2xl text-berry tracking-widest">
+                            &gt;&gt;&gt;
+                        </div>
+
+                        <!-- Interactive Social Links (Opens Pop-Up Preview Modal) -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2.5">
+                            <button type="button" data-social="linkedin" class="social-trigger inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-berry hover:bg-berry-dark text-cream font-mono text-xs font-bold tracking-wide shadow-xs transition-all hover:-translate-y-0.5 cursor-pointer">
+                                <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19M18.5 18.5V13.2A3.26 3.26 0 0 0 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17A1.4 1.4 0 0 1 15.71 13.57V18.5H18.5M6.88 8.56A1.68 1.68 0 0 0 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19A1.69 1.69 0 0 0 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56M8.27 18.5V10.13H5.5V18.5H8.27Z"/>
+                                </svg>
+                                <span>LinkedIn</span>
+                            </button>
+
+                            <button type="button" data-social="instagram" class="social-trigger inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-cream hover:bg-berry text-berry hover:text-cream border-2 border-berry font-mono text-xs font-bold tracking-wide shadow-xs transition-all hover:-translate-y-0.5 cursor-pointer">
+                                <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M7.8 2H16.2C19.4 2 22 4.6 22 7.8V16.2A5.8 5.8 0 0 1 16.2 22H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2M7.6 4A3.6 3.6 0 0 0 4 7.6V16.4C4 18.39 5.61 20 7.6 20H16.4A3.6 3.6 0 0 0 20 16.4V7.6C20 5.61 18.39 4 16.4 4H7.6M17.25 5.5A1.25 1.25 0 0 1 18.5 6.75A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75A1.25 1.25 0 0 1 17.25 5.5M12 7A5 5 0 0 1 17 12A5 5 0 0 1 12 17A5 5 0 0 1 7 12A5 5 0 0 1 12 7M12 9A3 3 0 0 0 9 12A3 3 0 0 0 12 15A3 3 0 0 0 15 12A3 3 0 0 0 12 9Z"/>
+                                </svg>
+                                <span>Instagram</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Index List matching Page 1 of PDF -->
+                    <ul class="pt-2 space-y-2.5 font-mono text-sm sm:text-base font-bold tracking-wider">
+                        <li>
+                            <a href="#profile" class="inline-flex items-center gap-3 text-ink hover:text-berry transition-colors">
+                                <span class="text-berry">01</span>
+                                <span>PROFILE</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#experience" class="inline-flex items-center gap-3 text-ink hover:text-berry transition-colors">
+                                <span class="text-berry">02</span>
+                                <span>EXPERIENCE</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#project" class="inline-flex items-center gap-3 text-ink hover:text-berry transition-colors">
+                                <span class="text-berry">03</span>
+                                <span>PROJECT</span>
+                            </a>
+                        </li>
+                        <li class="pt-1">
+                            <a href="#contact" class="font-sans font-extrabold text-base sm:text-lg text-ink hover:text-berry transition-colors">
+                                Contact
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right Column: Cover Portrait Frame (Batam Landmark) -->
+                <div class="md:col-span-6 flex justify-center md:justify-end">
+                    <div class="w-full max-w-[360px] bg-berry p-3 rounded-xl shadow-md">
+                        <div class="photo-slot aspect-[4/5] w-full rounded-lg bg-cream-dark" data-photo-id="cover_portrait">
+                            <img id="img_cover_portrait" src="" alt="Lailita Nur Ramadhani Portrait" class="hidden">
+                            <div id="ph_cover_portrait" class="w-full h-full flex flex-col items-center justify-center p-4 text-center text-ink-muted">
+                                <svg class="w-9 h-9 text-berry/60 mb-2" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <span class="font-mono text-xs font-bold text-berry">COVER PORTRAIT</span>
+                                <span class="text-[11px] mt-1">Klik untuk unggah atau gunakan tombol GANTI FOTO / PDF</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================================
+             PAGE 2: ABOUT LAILITA N.R (01 PROFILE)
+        ====================================================================== -->
+        <section id="profile" class="relative rounded-2xl bg-cream-light/80 border border-berry/15 p-5 sm:p-7 overflow-hidden">
+            <div class="rose-glow absolute top-0 right-0 w-72 h-72 rounded-full"></div>
+
+            <div class="relative grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <!-- Left Column: Workspace Flat-Lay Photo -->
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="w-full max-w-[330px] rounded-xl border-2 border-berry/25 bg-cream p-2 shadow-sm">
+                        <div class="photo-slot aspect-[3/4] w-full rounded-lg bg-cream-dark" data-photo-id="about_workspace">
+                            <img id="img_about_workspace" src="" alt="About Workspace" class="hidden">
+                            <div id="ph_about_workspace" class="w-full h-full flex flex-col items-center justify-center p-4 text-center text-ink-muted">
+                                <span class="font-mono text-xs font-bold text-berry">01 PROFILE PHOTO</span>
+                                <span class="text-[11px] mt-1">Klik untuk unggah foto workspace</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: ABOUT LAILITA N.R Bio Text -->
+                <div class="md:col-span-7 space-y-3">
+                    <div>
+                        <span class="font-mono text-xs font-bold uppercase tracking-widest text-berry">PROFILE</span>
+                        <h2 class="font-serif font-black text-3xl sm:text-4xl text-berry leading-tight mt-0.5">
+                            ABOUT<br>
+                            LAILITA N.R
+                        </h2>
+                        <div class="mt-1.5 font-mono font-extrabold text-lg text-berry tracking-widest">
+                            &gt;&gt;&gt;
+                        </div>
+                    </div>
+
+                    <div class="inline-block px-3 py-1 rounded-md bg-berry text-cream font-mono text-xs font-bold tracking-wider uppercase">
+                        AN ELECTRICAL ENGINEERING STUDENT
+                    </div>
+
+                    <div class="font-serif text-2xl text-berry leading-none select-none">&laquo;</div>
+
+                    <p class="text-sm sm:text-base leading-relaxed text-ink">
+                        Hi, I&rsquo;m <strong>Lailita Nur Ramadhani</strong>, an Electrical Engineering student at <strong>Politeknik Negeri Batam</strong> currently working in the Automation Division at <strong>PT. Pelican Mitra Sejati</strong>. I specialize in electrical wiring, PLC/VSD assembly, instrument inspection, and E&amp;I troubleshooting, alongside strong proficiency in Microsoft Office. Beyond technical work, my active role in the student association continues to sharpen my leadership and teamwork skills.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================================
+             PAGE 3: EDUCATION & HARDWARE MODULE ASSEMBLY
+        ====================================================================== -->
+        <section id="education" class="relative rounded-2xl bg-cream-light/80 border border-berry/15 p-5 sm:p-7 overflow-hidden">
+            <div class="rose-glow absolute -bottom-16 right-4 w-72 h-72 rounded-full"></div>
+
+            <div class="relative space-y-5">
+                <!-- Top Row: 2 Side-by-Side Hardware Photos (Restored Full 2-Column Grid) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Photo 1: RF Area Temperature Module Assembly -->
+                    <div class="rounded-xl border-2 border-berry/25 bg-cream p-2 shadow-sm">
+                        <div class="photo-slot aspect-[4/3] w-full rounded-lg bg-cream-dark" data-photo-id="edu_rf_module">
+                            <img id="img_edu_rf_module" src="" alt="RF Area Temperature Monitoring Module Assembly" class="hidden">
+                            <div id="ph_edu_rf_module" class="w-full h-full flex flex-col items-center justify-center p-3 text-center text-ink-muted">
+                                <span class="font-mono text-xs font-bold text-berry">RF MODULE ASSEMBLY</span>
+                                <span class="text-[11px] mt-1">Klik untuk unggah foto</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photo 2: Cleanroom PCB Lab -->
+                    <div class="rounded-xl border-2 border-berry/25 bg-cream p-2 shadow-sm">
+                        <div class="photo-slot aspect-[4/3] w-full rounded-lg bg-cream-dark" data-photo-id="edu_pcb_lab">
+                            <img id="img_edu_pcb_lab" src="" alt="PCB Fabrication Cleanroom Lab" class="hidden">
+                            <div id="ph_edu_pcb_lab" class="w-full h-full flex flex-col items-center justify-center p-3 text-center text-ink-muted">
+                                <span class="font-mono text-xs font-bold text-berry">PCB FABRICATION LAB</span>
+                                <span class="text-[11px] mt-1">Klik untuk unggah foto</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full-Width Berry-Red Module Banner Below Both Photos -->
+                <div class="rounded-xl bg-berry text-cream p-5 sm:p-6 shadow-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+                        <!-- Left Module Title -->
+                        <div class="space-y-2.5">
+                            <div class="font-extrabold text-sm sm:text-base uppercase leading-snug tracking-wide">
+                                RF AREA<br>
+                                TEMPERATURE<br>
+                                MONITORING<br>
+                                MODULE ASSEMBLY
+                            </div>
+                            <div class="w-8 h-1.5 rounded-full bg-ink"></div>
+                        </div>
+
+                        <!-- Right Module Title (Side-by-Side) -->
+                        <div class="sm:border-l sm:border-cream/20 sm:pl-6 space-y-2.5">
+                            <div class="font-extrabold text-sm sm:text-base uppercase leading-snug tracking-wide">
+                                ELECTRONICS<br>
+                                MODULE FOR<br>
+                                MUSICAL<br>
+                                INSTRUMENT
+                            </div>
+                            <div class="w-8 h-1.5 rounded-full bg-ink"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: EDUCATION Timeline -->
+                <div class="pt-3 border-t border-berry/15 grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+                    <div class="md:col-span-3">
+                        <h2 class="font-serif font-black text-3xl text-berry tracking-tight">
+                            EDUCATION
+                        </h2>
+                        <div class="mt-1 font-mono font-extrabold text-base text-berry tracking-widest">&gt;&gt;&gt;</div>
+                    </div>
+
+                    <div class="md:col-span-9 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Politeknik Negeri Batam -->
+                        <div class="rounded-xl bg-cream p-4 border border-berry/20 space-y-1.5">
+                            <span class="inline-block px-2.5 py-0.5 rounded bg-berry text-cream font-mono text-xs font-bold">
+                                2025 &ndash; Present
+                            </span>
+                            <h3 class="font-bold text-base sm:text-lg text-ink">Politeknik Negeri Batam</h3>
+                            <p class="font-mono text-xs font-bold text-berry">
+                                a Diploma (D3) student in Electrical Engineering
+                            </p>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed pt-1">
+                                During college, I developed hardware projects from scratch, including a Musical Instrument Module and an RF Area Temperature Module, handling everything from circuit tracing and PCB layout design to component mounting and finishing.
+                            </p>
+                        </div>
+
+                        <!-- SMAN 23 BATAM -->
+                        <div class="rounded-xl bg-cream p-4 border border-berry/20 space-y-1.5">
+                            <span class="inline-block px-2.5 py-0.5 rounded bg-berry/15 text-berry font-mono text-xs font-bold">
+                                2022 &ndash; 2025
+                            </span>
+                            <h3 class="font-bold text-base sm:text-lg text-ink">SMAN 23 BATAM</h3>
+                            <p class="font-mono text-xs font-bold text-berry">
+                                Natural Sciences (IPA) Major
+                            </p>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed pt-1">
+                                A Science (IPA) high school graduate with early exposure to electrical and automation fundamentals, as well as active involvement in school organizations.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================================
+             PAGE 4: PROJECT (2x2 MAROON COLLAGE + 01–04 SPECS)
+        ====================================================================== -->
+        <section id="project" class="relative rounded-2xl bg-cream-light/80 border border-berry/15 p-5 sm:p-7 overflow-hidden">
+            <div class="rose-glow absolute top-0 left-0 w-72 h-72 rounded-full"></div>
+
+            <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <!-- Left Column: Berry-Red Framed 2x2 Project Collage -->
+                <div class="lg:col-span-6">
+                    <div class="rounded-2xl bg-berry p-4 shadow-md space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h2 class="font-serif font-black text-3xl sm:text-4xl text-cream tracking-tight">
+                                Project
+                            </h2>
+                            <span class="font-mono text-xs font-bold text-cream/80 bg-berry-dark px-2.5 py-1 rounded">
+                                AUTOMATION
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- Project Photo 1: Contactor Wiring -->
+                            <div class="photo-slot aspect-[4/3] rounded-lg bg-cream-light p-1" data-photo-id="proj_1_contactor">
+                                <img id="img_proj_1_contactor" src="" alt="Motor Starter Contactor Wiring" class="hidden rounded">
+                                <div id="ph_proj_1_contactor" class="w-full h-full flex flex-col items-center justify-center p-2 text-center text-ink-muted">
+                                    <span class="font-mono text-[10px] font-bold text-berry">01. CONTACTOR WIRING</span>
+                                </div>
+                            </div>
+
+                            <!-- Project Photo 2: PLC & Temperature Controller -->
+                            <div class="photo-slot aspect-[4/3] rounded-lg bg-cream-light p-1" data-photo-id="proj_2_plc">
+                                <img id="img_proj_2_plc" src="" alt="PLC and Temperature Controller" class="hidden rounded">
+                                <div id="ph_proj_2_plc" class="w-full h-full flex flex-col items-center justify-center p-2 text-center text-ink-muted">
+                                    <span class="font-mono text-[10px] font-bold text-berry">02. PLC &amp; TEMP</span>
+                                </div>
+                            </div>
+
+                            <!-- Project Photo 3: VSD & Clamp Meter -->
+                            <div class="photo-slot aspect-[4/3] rounded-lg bg-cream-light p-1" data-photo-id="proj_3_vsd">
+                                <img id="img_proj_3_vsd" src="" alt="VSD and Clamp Meter Measurement" class="hidden rounded">
+                                <div id="ph_proj_3_vsd" class="w-full h-full flex flex-col items-center justify-center p-2 text-center text-ink-muted">
+                                    <span class="font-mono text-[10px] font-bold text-berry">03. VSD &amp; CLAMP</span>
+                                </div>
+                            </div>
+
+                            <!-- Project Photo 4: 3-Phase Induction Motor -->
+                            <div class="photo-slot aspect-[4/3] rounded-lg bg-cream-light p-1" data-photo-id="proj_4_motor">
+                                <img id="img_proj_4_motor" src="" alt="3-Phase Induction Motor" class="hidden rounded">
+                                <div id="ph_proj_4_motor" class="w-full h-full flex flex-col items-center justify-center p-2 text-center text-ink-muted">
+                                    <span class="font-mono text-[10px] font-bold text-berry">04. 3-PHASE MOTOR</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: 01 - 04 Technical Project Specifications -->
+                <div class="lg:col-span-6 space-y-3">
+                    <div class="font-mono font-extrabold text-lg text-berry tracking-widest">&gt;&gt;&gt;</div>
+
+                    <div class="space-y-3">
+                        <div class="rounded-xl bg-cream p-3.5 border border-berry/20">
+                            <h3 class="font-bold text-sm sm:text-base text-berry">
+                                01. Motor Starter Assembly:
+                            </h3>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed mt-1">
+                                Built DOL, Star-Delta, Star-Delta Forward-Reverse, and Auto-Transformer contactor control circuits from schematics.
+                            </p>
+                        </div>
+
+                        <div class="rounded-xl bg-cream p-3.5 border border-berry/20">
+                            <h3 class="font-bold text-sm sm:text-base text-berry">
+                                02. PLC &amp; Temperature Automation:
+                            </h3>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed mt-1">
+                                Wired and programmed PLC systems for automated temperature monitoring and control.
+                            </p>
+                        </div>
+
+                        <div class="rounded-xl bg-cream p-3.5 border border-berry/20">
+                            <h3 class="font-bold text-sm sm:text-base text-berry">
+                                03. VSD &amp; Modbus Integration:
+                            </h3>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed mt-1">
+                                Configured VSD parameters and operated motors via manual mode, contactor relays, and Modbus RS-485.
+                            </p>
+                        </div>
+
+                        <div class="rounded-xl bg-cream p-3.5 border border-berry/20">
+                            <h3 class="font-bold text-sm sm:text-base text-berry">
+                                04. Remote Monitoring &amp; Industrial Communication:
+                            </h3>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed mt-1">
+                                Developed Arduino-based remote monitoring and control programs (Arduino IDE, QModbus) to operate VSDs and induction motors via Modbus RTU, RS-485, and MOXA serial converters.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================================
+             PAGE 5: WORK INSPECTION (02 EXPERIENCE - PT. PELICAN MITRA SEJATI)
+        ====================================================================== -->
+        <section id="experience" class="relative rounded-2xl bg-cream-light/80 border border-berry/15 p-5 sm:p-7 overflow-hidden">
+            <div class="rose-glow absolute -bottom-16 left-6 w-72 h-72 rounded-full"></div>
+
+            <div class="relative grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <!-- Left Column: Two Onboard Marine Inspection Field Photos -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="rounded-xl border-2 border-berry/25 bg-cream p-2 shadow-sm">
+                        <div class="photo-slot aspect-[4/3] w-full rounded-lg bg-cream-dark" data-photo-id="exp_ship_bridge">
+                            <img id="img_exp_ship_bridge" src="" alt="Shipyard Vessel Bridge Inspection" class="hidden">
+                            <div id="ph_exp_ship_bridge" class="w-full h-full flex flex-col items-center justify-center p-3 text-center text-ink-muted">
+                                <span class="font-mono text-xs font-bold text-berry">VESSEL BRIDGE INSPECTION</span>
+                                <span class="text-[11px] mt-1">Klik untuk unggah foto</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl border-2 border-berry/25 bg-cream p-2 shadow-sm">
+                        <div class="photo-slot aspect-[4/3] w-full rounded-lg bg-cream-dark" data-photo-id="exp_engine_room">
+                            <img id="img_exp_engine_room" src="" alt="PT. Pelican Mitra Sejati Engine Room Inspection" class="hidden">
+                            <div id="ph_exp_engine_room" class="w-full h-full flex flex-col items-center justify-center p-3 text-center text-ink-muted">
+                                <span class="font-mono text-xs font-bold text-berry">ENGINE ROOM INSPECTION</span>
+                                <span class="text-[11px] mt-1">Klik untuk unggah foto</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Work INSPECTION Header & Vessel Findings -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div>
+                        <span class="font-serif text-xl text-berry leading-none">&laquo;</span>
+                        <h2 class="font-serif font-black text-3xl sm:text-4xl text-berry leading-tight">
+                            Work INSPECTION
+                        </h2>
+                        <div class="mt-2 p-3 rounded-xl bg-berry text-cream">
+                            <div class="font-extrabold text-sm sm:text-base tracking-wide">
+                                PT. PELICAN MITRA SEJATI
+                            </div>
+                            <div class="font-mono text-[11px] text-cream/90 mt-0.5">
+                                MECHANICAL ELECTRICAL, R &amp; D, SPARE PART &bull; MARINE SHIPYARD AND OIL &amp; GAS &bull; WWW.PELICAN-MS.COM
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 Vessel Inspection Reports -->
+                    <div class="space-y-3">
+                        <!-- MASA GUARDIAN -->
+                        <div class="rounded-xl bg-cream p-4 border-l-4 border-berry shadow-xs">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <h3 class="font-extrabold text-base text-ink">MASA GUARDIAN</h3>
+                                <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-berry/10 text-berry">
+                                    Synchrony - VSD to HMI
+                                </span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed mt-1.5">
+                                It was found that the control parameter values displayed on the monitoring system do not synchronize with the actual readings on the VSD panel.
+                            </p>
+                        </div>
+
+                        <!-- PERDANA PROTECTOR -->
+                        <div class="rounded-xl bg-cream p-4 border-l-4 border-berry shadow-xs">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <h3 class="font-extrabold text-base text-ink">PERDANA PROTECTOR</h3>
+                                <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-berry/10 text-berry">
+                                    OIL MIXING VALVE (OMV) ERROR
+                                </span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed mt-1.5">
+                                Oil Mixing Valve (OMV) inspection revealed burned stepper motor windings and a burnt driver IC on its internal PCB.
+                            </p>
+                        </div>
+
+                        <!-- GAZ DIAMOND -->
+                        <div class="rounded-xl bg-cream p-4 border-l-4 border-berry shadow-xs">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <h3 class="font-extrabold text-base text-ink">GAZ DIAMOND</h3>
+                                <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-berry/10 text-berry">
+                                    Marine Navigation &amp; Communication Systems
+                                </span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-ink-muted leading-relaxed mt-1.5">
+                                Navigation &amp; Positioning Systems (Echo Sounder &amp; Speed Log, Radar, GPS Interchange Switch, ECDIS Repeater, Course Recorder Quadrant), Marine Communication &amp; Alarm Systems (VHF, NAVTEX, AIS Lost Alarm, Telegraph Logger), Instrumentation &amp; Panel Arrangement (CCR Anemometer, Rack Arrangement).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================================
+             PAGE 6: LET'S WORK TOGETHER (CONTACT)
+        ====================================================================== -->
+        <section id="contact" class="relative rounded-2xl bg-cream-light/80 border border-berry/15 p-6 sm:p-8 text-center overflow-hidden">
+            <div class="rose-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full"></div>
+
+            <div class="relative max-w-2xl mx-auto space-y-4">
+                <div class="font-serif text-3xl text-berry leading-none">&laquo;</div>
+                <h2 class="font-serif font-black text-3xl sm:text-5xl text-berry tracking-tight">
+                    Let&rsquo;s Work Together
+                </h2>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                    <!-- Phone / WhatsApp -->
+                    <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cream border border-berry/25 shadow-xs">
+                        <a href="tel:+6281917622522" class="font-mono font-bold text-xs sm:text-sm text-ink hover:text-berry transition-colors">
+                            +62 81917622522
+                        </a>
+                        <button type="button" data-copy="+62 81917622522" class="copy-btn px-2.5 py-1 rounded-lg bg-berry/10 hover:bg-berry text-berry hover:text-cream font-mono text-[10px] font-bold transition-colors">
+                            COPY
+                        </button>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cream border border-berry/25 shadow-xs max-w-full">
+                        <a href="mailto:lailitanurramadhani1006@gmail.com" class="font-mono font-bold text-xs sm:text-sm text-ink hover:text-berry transition-colors truncate">
+                            lailitanurramadhani1006@gmail.com
+                        </a>
+                        <button type="button" data-copy="lailitanurramadhani1006@gmail.com" class="copy-btn px-2.5 py-1 rounded-lg bg-berry/10 hover:bg-berry text-berry hover:text-cream font-mono text-[10px] font-bold transition-colors shrink-0">
+                            COPY
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compact Footer -->
+        <footer class="py-3 text-center border-t border-berry/15">
+            <p class="font-mono text-xs text-ink-muted">
+                &copy; 2026 <span class="font-bold text-berry">LAILITA NUR RAMADHANI</span> &mdash; Electrical Engineering &amp; Automation Portfolio
+            </p>
+        </footer>
+    </main>
+
+    <!-- =========================================================================
+         RESULTS POP-UP LIGHTBOX MODAL (OPENS WHEN ANY PHOTO IS CLICKED)
+    ========================================================================== -->
+    <div id="resultsModal" class="fixed inset-0 z-50 hidden bg-ink/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-cream-light border-2 border-berry/30 rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl">
+            <!-- Modal Header -->
+            <div class="bg-berry text-cream px-5 py-3 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <span id="modalCounter" class="font-mono text-xs font-bold bg-berry-dark px-2.5 py-1 rounded">
+                        RESULT 1 / 10
+                    </span>
+                    <h3 id="modalTitle" class="font-bold text-sm sm:text-base truncate">
+                        Project / Inspection Result
+                    </h3>
+                </div>
+                <button type="button" id="closeModalBtn" class="w-8 h-8 rounded-lg bg-berry-dark hover:bg-ink text-cream font-bold flex items-center justify-center transition-colors">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Modal Image Preview -->
+            <div class="bg-ink/95 flex items-center justify-center max-h-[60vh] overflow-hidden p-3">
+                <img id="modalImage" src="" alt="Result Preview" class="max-h-[56vh] w-auto object-contain rounded-lg">
+            </div>
+
+            <!-- Modal Description & Controls -->
+            <div class="p-4 sm:p-5 bg-cream space-y-3">
+                <p id="modalDesc" class="text-xs sm:text-sm text-ink leading-relaxed"></p>
+
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-berry/15">
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="prevResultBtn" class="px-3 py-1.5 rounded-lg bg-berry/10 hover:bg-berry text-berry hover:text-cream font-mono text-xs font-bold transition-colors">
+                            &larr; PREV
+                        </button>
+                        <button type="button" id="nextResultBtn" class="px-3 py-1.5 rounded-lg bg-berry/10 hover:bg-berry text-berry hover:text-cream font-mono text-xs font-bold transition-colors">
+                            NEXT &rarr;
+                        </button>
+                    </div>
+
+                    <button type="button" id="replacePhotoModalBtn" class="px-3.5 py-1.5 rounded-lg bg-berry hover:bg-berry-dark text-cream font-mono text-xs font-bold transition-colors">
+                        GANTI FOTO INI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================================
+         SOCIAL PROFILE & WEBSITE PREVIEW POP-UP MODAL
+    ========================================================================== -->
+    <div id="socialModal" class="fixed inset-0 z-50 hidden bg-ink/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-cream-light border-2 border-berry/30 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
+            <!-- Modal Header -->
+            <div class="bg-berry text-cream px-5 py-3.5 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <span id="socialModalBadge" class="font-mono text-xs font-bold bg-berry-dark px-2.5 py-1 rounded uppercase">
+                        LINKEDIN
+                    </span>
+                    <h3 id="socialModalHeaderTitle" class="font-bold text-sm sm:text-base truncate">
+                        Social Profile Preview
+                    </h3>
+                </div>
+                <button type="button" id="closeSocialModalBtn" class="w-8 h-8 rounded-lg bg-berry-dark hover:bg-ink text-cream font-bold flex items-center justify-center transition-colors cursor-pointer">
+                    &times;
+                </button>
+            </div>
+
+            <!-- Rich Interactive Profile Preview Card -->
+            <div class="p-5 sm:p-6 bg-cream space-y-4">
+                <div class="rounded-xl bg-cream-light border border-berry/25 p-4 sm:p-5 shadow-xs space-y-3">
+                    <div class="flex items-center gap-3.5">
+                        <div id="socialModalIconBox" class="w-12 h-12 rounded-xl bg-berry text-cream flex items-center justify-center shrink-0 shadow-xs">
+                            <!-- Icon injected via JS -->
+                        </div>
+                        <div class="min-w-0">
+                            <div id="socialModalName" class="font-serif font-black text-lg sm:text-xl text-ink truncate">
+                                Lailita Nur Ramadhani
+                            </div>
+                            <div id="socialModalHandle" class="font-mono text-xs font-bold text-berry truncate">
+                                www.linkedin.com/in/lailitanr
+                            </div>
+                        </div>
+                    </div>
+
+                    <p id="socialModalBio" class="text-xs sm:text-sm text-ink-muted leading-relaxed">
+                        Electrical Engineering Student at Politeknik Negeri Batam &bull; Automation Division at PT. Pelican Mitra Sejati.
+                    </p>
+
+                    <!-- Clean URL Bar with Copy Button -->
+                    <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-cream border border-berry/20">
+                        <span id="socialModalUrlText" class="font-mono text-[11px] text-ink truncate">
+                            https://www.linkedin.com/in/lailitanr
+                        </span>
+                        <button type="button" id="copySocialUrlBtn" class="px-2.5 py-1 rounded bg-berry/10 hover:bg-berry text-berry hover:text-cream font-mono text-[10px] font-bold transition-colors shrink-0 cursor-pointer">
+                            COPY LINK
+                        </button>
+                    </div>
+
+                    <p class="text-[11px] text-ink-muted/80 italic">
+                        *Preview kartu profil ditampilkan langsung di sini karena LinkedIn &amp; Instagram membatasi tampilan iframe eksternal.
+                    </p>
+                </div>
+
+                <!-- Primary Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-end gap-2.5 pt-1">
+                    <button type="button" id="closeSocialFooterBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-berry/10 hover:bg-berry/20 text-berry font-mono text-xs font-bold transition-colors cursor-pointer">
+                        TUTUP
+                    </button>
+                    <a id="socialExternalLinkBtn" href="https://www.linkedin.com/in/lailitanr" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-berry hover:bg-berry-dark text-cream font-mono text-xs font-bold tracking-wide shadow-sm transition-colors text-center inline-flex items-center justify-center gap-2">
+                        <span>Buka di Tab Baru / Open Link</span>
+                        <span>&nearr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================================
+         TOAST NOTIFICATION BANNER
+    ========================================================================== -->
+    <div id="toastBanner" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-berry text-cream font-mono text-xs font-bold shadow-lg">
+        Status updated!
+    </div>
+
+    <!-- =========================================================================
+         JAVASCRIPT: INDEXEDDB PHOTO STORAGE, PDF EXTRACTOR & RESULTS POP-UP
+    ========================================================================== -->
+    <script>
+        (function () {
+            // Configure PDF.js Worker
+            if (window.pdfjsLib) {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+
+            // Metadata for all 10 photo slots across the 6 pages
+            const PHOTO_ITEMS = [
+                {
+                    id: 'cover_portrait',
+                    title: 'LAILITA NUR RAMADHANI — Electrical Engineering & Automation',
+                    desc: 'Politeknik Negeri Batam Electrical Engineering student & Automation Division technician at PT. Pelican Mitra Sejati.'
+                },
+                {
+                    id: 'about_workspace',
+                    title: '01. Profile & Documentation Workflow',
+                    desc: 'Technical documentation, Microsoft Office reporting, electrical schematic planning, and student association coordination.'
+                },
+                {
+                    id: 'edu_rf_module',
+                    title: 'RF Area Temperature Monitoring Module Assembly (8.8°C)',
+                    desc: 'End-to-end hardware fabrication developed at Politeknik Negeri Batam: circuit schematic tracing, PCB layout design, soldering, enclosure assembly, and 7-segment display calibration.'
+                },
+                {
+                    id: 'edu_pcb_lab',
+                    title: 'Cleanroom PCB Etching & Fabrication Lab',
+                    desc: 'Hands-on PCB etching, chemical processing, and hardware quality finishing inside Politeknik Negeri Batam electronics laboratory.'
+                },
+                {
+                    id: 'proj_1_contactor',
+                    title: '01. Motor Starter Contactor Control Assembly',
+                    desc: 'Assembled and wired industrial motor starter circuits from electrical schematics including DOL, Star-Delta, Star-Delta Forward-Reverse, and Auto-Transformer starters.'
+                },
+                {
+                    id: 'proj_2_plc',
+                    title: '02. PLC & Digital Temperature Controller Integration',
+                    desc: 'Wired and programmed Schneider Zelio smart relay/PLC integrated with digital temperature controller, power supply, contactor, and pilot indicator lamps.'
+                },
+                {
+                    id: 'proj_3_vsd',
+                    title: '03. VSD Parameterization & Current Measurement (25.1 A)',
+                    desc: 'Configured Variable Speed Drive (VSD) parameters for manual, contactor relay, and Modbus RS-485 operation while verifying phase current with a digital clamp meter.'
+                },
+                {
+                    id: 'proj_4_motor',
+                    title: '04. 3-Phase Induction Motor & Remote Modbus Control',
+                    desc: 'Commissioned belt-driven 3-phase induction motor controlled remotely via Arduino IDE, QModbus, Modbus RTU, RS-485, and MOXA serial converters.'
+                },
+                {
+                    id: 'exp_ship_bridge',
+                    title: 'Marine Vessel Bridge & Navigation Inspection (GAZ DIAMOND)',
+                    desc: 'Onboard shipyard inspection and commissioning of Echo Sounder & Speed Log, Radar, GPS Interchange Switch, ECDIS Repeater, VHF, NAVTEX, and AIS Lost Alarm.'
+                },
+                {
+                    id: 'exp_engine_room',
+                    title: 'Engine Room E&I Troubleshooting (MASA GUARDIAN & PERDANA PROTECTOR)',
+                    desc: 'Field E&I troubleshooting for PT. Pelican Mitra Sejati: diagnosed VSD-to-HMI parameter synchronization mismatch and Oil Mixing Valve (OMV) burned stepper motor windings & driver IC.'
+                }
+            ];
+
+            const DB_NAME = 'LailitaPortfolioDB';
+            const STORE_NAME = 'photos';
+            let dbInstance = null;
+            let savedPhotos = {};
+            let currentModalIndex = 0;
+            let activeUploadTargetId = null;
+
+            // Toast Helper
+            const toastEl = document.getElementById('toastBanner');
+            let toastTimer = null;
+            function showToast(msg) {
+                toastEl.textContent = msg;
+                toastEl.classList.remove('hidden');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toastEl.classList.add('hidden'), 3200);
+            }
+
+            // Open IndexedDB
+            function openDB() {
+                return new Promise((resolve, reject) => {
+                    const req = indexedDB.open(DB_NAME, 1);
+                    req.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains(STORE_NAME)) {
+                            db.createObjectStore(STORE_NAME);
+                        }
+                    };
+                    req.onsuccess = (e) => {
+                        dbInstance = e.target.result;
+                        resolve(dbInstance);
+                    };
+                    req.onerror = (e) => reject(e.target.error);
+                });
+            }
+
+            // Save Photo DataURL to IndexedDB
+            function savePhotoToDB(key, dataUrl) {
+                savedPhotos[key] = dataUrl;
+                if (!dbInstance) return Promise.resolve();
+                return new Promise((resolve) => {
+                    const tx = dbInstance.transaction(STORE_NAME, 'readwrite');
+                    tx.objectStore(STORE_NAME).put(dataUrl, key);
+                    tx.oncomplete = () => resolve();
+                    tx.onerror = () => resolve();
+                });
+            }
+
+            // Load All Saved Photos from IndexedDB
+            function loadAllPhotosFromDB() {
+                if (!dbInstance) return Promise.resolve();
+                return new Promise((resolve) => {
+                    const tx = dbInstance.transaction(STORE_NAME, 'readonly');
+                    const store = tx.objectStore(STORE_NAME);
+                    const req = store.openCursor();
+                    req.onsuccess = (e) => {
+                        const cursor = e.target.result;
+                        if (cursor) {
+                            savedPhotos[cursor.key] = cursor.value;
+                            cursor.continue();
+                        } else {
+                            resolve();
+                        }
+                    };
+                    req.onerror = () => resolve();
+                });
+            }
+
+            // Render Photos into DOM
+            function renderAllPhotos() {
+                PHOTO_ITEMS.forEach((item) => {
+                    const imgEl = document.getElementById('img_' + item.id);
+                    const phEl = document.getElementById('ph_' + item.id);
+                    if (savedPhotos[item.id] && imgEl && phEl) {
+                        imgEl.src = savedPhotos[item.id];
+                        imgEl.classList.remove('hidden');
+                        phEl.classList.add('hidden');
+                    } else if (imgEl && phEl) {
+                        imgEl.classList.add('hidden');
+                        phEl.classList.remove('hidden');
+                    }
+                });
+
+                // Render Custom Company Logo if uploaded
+                const customLogoImg = document.getElementById('customLogoImg');
+                const defaultLogo = document.getElementById('defaultPelicanLogo');
+                if (savedPhotos['company_logo'] && customLogoImg && defaultLogo) {
+                    customLogoImg.src = savedPhotos['company_logo'];
+                    customLogoImg.classList.remove('hidden');
+                    defaultLogo.classList.add('hidden');
+                }
+            }
+
+            // =========================================================================
+            // RESULTS POP-UP LIGHTBOX MODAL LOGIC
+            // =========================================================================
+            const modalEl = document.getElementById('resultsModal');
+            const modalCounterEl = document.getElementById('modalCounter');
+            const modalTitleEl = document.getElementById('modalTitle');
+            const modalImageEl = document.getElementById('modalImage');
+            const modalDescEl = document.getElementById('modalDesc');
+
+            function openResultModal(index) {
+                if (index < 0) index = PHOTO_ITEMS.length - 1;
+                if (index >= PHOTO_ITEMS.length) index = 0;
+                currentModalIndex = index;
+
+                const item = PHOTO_ITEMS[currentModalIndex];
+                if (!savedPhotos[item.id]) {
+                    activeUploadTargetId = item.id;
+                    document.getElementById('singlePhotoInput').click();
+                    return;
+                }
+
+                modalCounterEl.textContent = `RESULT ${currentModalIndex + 1} / ${PHOTO_ITEMS.length}`;
+                modalTitleEl.textContent = item.title;
+                modalImageEl.src = savedPhotos[item.id];
+                modalDescEl.textContent = item.desc;
+                modalEl.classList.remove('hidden');
+            }
+
+            function closeResultModal() {
+                modalEl.classList.add('hidden');
+            }
+
+            document.querySelectorAll('.photo-slot').forEach((slot) => {
+                slot.addEventListener('click', () => {
+                    const photoId = slot.getAttribute('data-photo-id');
+                    const idx = PHOTO_ITEMS.findIndex((p) => p.id === photoId);
+                    if (idx !== -1) openResultModal(idx);
+                });
+            });
+
+            document.getElementById('closeModalBtn').addEventListener('click', closeResultModal);
+            modalEl.addEventListener('click', (e) => {
+                if (e.target === modalEl) closeResultModal();
+            });
+            document.getElementById('prevResultBtn').addEventListener('click', () => openResultModal(currentModalIndex - 1));
+            document.getElementById('nextResultBtn').addEventListener('click', () => openResultModal(currentModalIndex + 1));
+            document.getElementById('replacePhotoModalBtn').addEventListener('click', () => {
+                const item = PHOTO_ITEMS[currentModalIndex];
+                if (!item) return;
+                activeUploadTargetId = item.id;
+                document.getElementById('singlePhotoInput').click();
+            });
+
+            // Keyboard navigation for Lightbox & Social Modal
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (!modalEl.classList.contains('hidden')) closeResultModal();
+                    if (!socialModalEl.classList.contains('hidden')) closeSocialModal();
+                }
+                if (modalEl.classList.contains('hidden')) return;
+                if (e.key === 'ArrowLeft') openResultModal(currentModalIndex - 1);
+                if (e.key === 'ArrowRight') openResultModal(currentModalIndex + 1);
+            });
+
+            // =========================================================================
+            // SOCIAL PROFILE POP-UP MODAL LOGIC (LINKEDIN & INSTAGRAM)
+            // =========================================================================
+            const SOCIAL_PROFILES = {
+                linkedin: {
+                    badge: 'LINKEDIN',
+                    headerTitle: 'LinkedIn Profile — Lailita Nur Ramadhani',
+                    name: 'Lailita Nur Ramadhani',
+                    handle: 'www.linkedin.com/in/lailitanr',
+                    url: 'https://www.linkedin.com/in/lailitanr',
+                    bio: 'Electrical Engineering Student (D3) at Politeknik Negeri Batam | Automation Division Technician at PT. Pelican Mitra Sejati | PLC, VSD, E&I Troubleshooting & Marine Systems.',
+                    iconSvg: '<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19M18.5 18.5V13.2A3.26 3.26 0 0 0 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17A1.4 1.4 0 0 1 15.71 13.57V18.5H18.5M6.88 8.56A1.68 1.68 0 0 0 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19A1.69 1.69 0 0 0 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56M8.27 18.5V10.13H5.5V18.5H8.27Z"/></svg>'
+                },
+                instagram: {
+                    badge: 'INSTAGRAM',
+                    headerTitle: 'Instagram Profile — @lltaaaaar._',
+                    name: 'Lailita Nur Ramadhani (@lltaaaaar._)',
+                    handle: '@lltaaaaar._',
+                    url: 'https://www.instagram.com/lltaaaaar._?knvt=ZG5ucDhiOGIxMHhz',
+                    bio: 'Engineering journey, campus life at Politeknik Negeri Batam, automation projects, and daily moments.',
+                    iconSvg: '<svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M7.8 2H16.2C19.4 2 22 4.6 22 7.8V16.2A5.8 5.8 0 0 1 16.2 22H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2M7.6 4A3.6 3.6 0 0 0 4 7.6V16.4C4 18.39 5.61 20 7.6 20H16.4A3.6 3.6 0 0 0 20 16.4V7.6C20 5.61 18.39 4 16.4 4H7.6M17.25 5.5A1.25 1.25 0 0 1 18.5 6.75A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75A1.25 1.25 0 0 1 17.25 5.5M12 7A5 5 0 0 1 17 12A5 5 0 0 1 12 17A5 5 0 0 1 7 12A5 5 0 0 1 12 7M12 9A3 3 0 0 0 9 12A3 3 0 0 0 12 15A3 3 0 0 0 15 12A3 3 0 0 0 12 9Z"/></svg>'
+                }
+            };
+
+            const socialModalEl = document.getElementById('socialModal');
+            let activeSocialUrl = '';
+
+            function openSocialModal(platformKey) {
+                const profile = SOCIAL_PROFILES[platformKey];
+                if (!profile) return;
+                activeSocialUrl = profile.url;
+                document.getElementById('socialModalBadge').textContent = profile.badge;
+                document.getElementById('socialModalHeaderTitle').textContent = profile.headerTitle;
+                document.getElementById('socialModalIconBox').innerHTML = profile.iconSvg;
+                document.getElementById('socialModalName').textContent = profile.name;
+                document.getElementById('socialModalHandle').textContent = profile.handle;
+                document.getElementById('socialModalBio').textContent = profile.bio;
+                document.getElementById('socialModalUrlText').textContent = profile.url;
+                document.getElementById('socialExternalLinkBtn').href = profile.url;
+                socialModalEl.classList.remove('hidden');
+            }
+
+            function closeSocialModal() {
+                socialModalEl.classList.add('hidden');
+            }
+
+            document.querySelectorAll('.social-trigger').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    openSocialModal(btn.getAttribute('data-social'));
+                });
+            });
+
+            document.getElementById('closeSocialModalBtn').addEventListener('click', closeSocialModal);
+            document.getElementById('closeSocialFooterBtn').addEventListener('click', closeSocialModal);
+            socialModalEl.addEventListener('click', (e) => {
+                if (e.target === socialModalEl) closeSocialModal();
+            });
+
+            document.getElementById('copySocialUrlBtn').addEventListener('click', () => {
+                if (!activeSocialUrl) return;
+                const tempInput = document.createElement('input');
+                tempInput.value = activeSocialUrl;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showToast('Link profil berhasil disalin!');
+            });
+
+            // Company Logo Click to Upload Custom Logo Image
+            document.getElementById('companyLogoWrapper').addEventListener('click', () => {
+                activeUploadTargetId = 'company_logo';
+                document.getElementById('singlePhotoInput').click();
+            });
+
+            // Handle Single Photo File Selection
+            document.getElementById('singlePhotoInput').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file || !activeUploadTargetId) return;
+                const reader = new FileReader();
+                reader.onload = async (ev) => {
+                    await savePhotoToDB(activeUploadTargetId, ev.target.result);
+                    renderAllPhotos();
+                    showToast('Foto berhasil disimpan!');
+                    if (!modalEl.classList.contains('hidden') && activeUploadTargetId !== 'company_logo') {
+                        openResultModal(currentModalIndex);
+                    }
+                };
+                reader.readAsDataURL(file);
+                e.target.value = '';
+            });
+
+            // Automatic PDF Photo Extractor
+            document.getElementById('btnExtractPdf').addEventListener('click', () => {
+                document.getElementById('pdfUploadInput').click();
+            });
+
+            function cropCanvas(sourceCanvas, rx, ry, rw, rh) {
+                const c = document.createElement('canvas');
+                const sx = Math.round(sourceCanvas.width * rx);
+                const sy = Math.round(sourceCanvas.height * ry);
+                const sw = Math.round(sourceCanvas.width * rw);
+                const sh = Math.round(sourceCanvas.height * rh);
+                c.width = sw;
+                c.height = sh;
+                const ctx = c.getContext('2d');
+                ctx.drawImage(sourceCanvas, sx, sy, sw, sh, 0, 0, sw, sh);
+                return c.toDataURL('image/jpeg', 0.9);
+            }
+
+            document.getElementById('pdfUploadInput').addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file || !window.pdfjsLib) return;
+
+                showToast('Mengekstrak 10 foto dari PDF...');
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+                    const renderPage = async (pageNum) => {
+                        if (pageNum > pdf.numPages) return null;
+                        const page = await pdf.getPage(pageNum);
+                        const viewport = page.getViewport({ scale: 2.0 });
+                        const canvas = document.createElement('canvas');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+                        return canvas;
+                    };
+
+                    // Page 1: Cover Portrait
+                    const p1 = await renderPage(1);
+                    if (p1) await savePhotoToDB('cover_portrait', cropCanvas(p1, 0.48, 0.14, 0.45, 0.72));
+
+                    // Page 2: About Workspace
+                    const p2 = await renderPage(2);
+                    if (p2) await savePhotoToDB('about_workspace', cropCanvas(p2, 0.06, 0.12, 0.40, 0.76));
+
+                    // Page 3: Education RF Module & PCB Lab
+                    const p3 = await renderPage(3);
+                    if (p3) {
+                        await savePhotoToDB('edu_rf_module', cropCanvas(p3, 0.06, 0.08, 0.34, 0.42));
+                        await savePhotoToDB('edu_pcb_lab', cropCanvas(p3, 0.42, 0.08, 0.34, 0.42));
+                    }
+
+                    // Page 4: Project 2x2 Grid
+                    const p4 = await renderPage(4);
+                    if (p4) {
+                        await savePhotoToDB('proj_1_contactor', cropCanvas(p4, 0.07, 0.25, 0.21, 0.28));
+                        await savePhotoToDB('proj_2_plc', cropCanvas(p4, 0.29, 0.25, 0.21, 0.28));
+                        await savePhotoToDB('proj_3_vsd', cropCanvas(p4, 0.07, 0.55, 0.21, 0.28));
+                        await savePhotoToDB('proj_4_motor', cropCanvas(p4, 0.29, 0.55, 0.21, 0.28));
+                    }
+
+                    // Page 5: Work Inspection Photos
+                    const p5 = await renderPage(5);
+                    if (p5) {
+                        await savePhotoToDB('exp_ship_bridge', cropCanvas(p5, 0.06, 0.08, 0.36, 0.40));
+                        await savePhotoToDB('exp_engine_room', cropCanvas(p5, 0.06, 0.51, 0.36, 0.40));
+                    }
+
+                    renderAllPhotos();
+                    showToast('10 foto asli berhasil dimuat dari PDF!');
+                } catch (err) {
+                    console.error(err);
+                    showToast('Gagal membaca PDF. Silakan unggah foto satuan.');
+                }
+                e.target.value = '';
+            });
+
+            // Copy to Clipboard Buttons (Contact Section)
+            document.querySelectorAll('.copy-btn').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const text = btn.getAttribute('data-copy');
+                    const tempInput = document.createElement('input');
+                    tempInput.value = text;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    showToast(`Tersalin: ${text}`);
+                });
+            });
+
+            // Initialize DB & Render Existing Saved Photos on Load
+            openDB().then(loadAllPhotosFromDB).then(renderAllPhotos);
+        })();
+    </script>
+</body>
+</html>
